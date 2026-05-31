@@ -1,2 +1,2 @@
-# solar-system-simulation
+# Solar system simulation
 This project aims at creating an accurate Solar system simulation with details on planets, satelites, etc...
