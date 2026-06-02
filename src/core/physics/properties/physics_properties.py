@@ -2,7 +2,17 @@ from panda3d.core import Vec3D
 
 
 class PhysicsProperties:
+    """
+    The PhysicsProperties class encapsulates the physical properties of a celestial body, such as mass, radius, position, velocity, and acceleration. It provides methods to apply forces to the body and update its state based on the applied forces.
+    """
     def __init__(self, mass: float, radius: float, position: Vec3D) -> None:
+        """
+            Init method of the PhysicsProperties class, which initializes the mass, radius, position, velocity, and acceleration of the celestial body.
+        Args:
+            mass (float): The mass of the celestial body, which determines how much it will be affected by gravitational forces and how much force it will exert on other bodies.
+            radius (float): The radius of the celestial body, which is used for collision detection and rendering purposes.
+            position (Vec3D): The initial position of the celestial body in 3D space, represented as a Vec3D object. This position will be updated over time based on the body's velocity and acceleration.
+        """
         self.__mass: float = mass
         self.__radius: float = radius
         self.__acceleration: Vec3D = Vec3D(0, 0, 0)
@@ -14,9 +24,19 @@ class PhysicsProperties:
     # ----------------------------- #
 
     def apply_force(self, force: Vec3D) -> None:
+        """
+        Apply a force to the celestial body, which will affect its acceleration based on Newton's second law of motion (F = m * a).
+
+        The acceleration is updated by adding the force divided by the mass of the body
+        Args:
+            force (Vec3D): The force vector to be applied to the celestial body. This force will affect the body's acceleration and, consequently, its velocity and position over time.
+        """
         self.__acceleration += force / self.__mass
 
     def reset_acceleration(self) -> None:
+        """
+        Reset the acceleration of the celestial body to zero. This is typically called at the end of each update cycle after the forces have been applied and the velocity and position have been updated, to prepare for the next cycle of force calculations.
+        """
         self.__acceleration = Vec3D(0, 0, 0)
 
     # ----------------------------- #
@@ -24,24 +44,54 @@ class PhysicsProperties:
     # ----------------------------- #
 
     def get_mass(self) -> float:
+        """
+        Getter for the mass of the celestial body.
+        Returns:
+            float: The mass of the celestial body.
+        """
         return self.__mass
 
     def get_radius(self) -> float:
+        """
+        Getter for the radius of the celestial body.
+        Returns:
+            float: The radius of the celestial body.
+        """
         return self.__radius
 
     def get_position(self) -> Vec3D:
+        """
+        Getter for the position of the celestial body.
+        Returns:
+            Vec3D: The position of the celestial body in 3D space.
+        """
         return self.__position
 
     def direction(self) -> Vec3D:
-        """Returns the normalized direction vector. If the velocity is zero, it returns a zero vector."""
+        """
+        Returns the normalized direction vector. If the velocity is zero, it returns a zero vector.
+
+        Returns:
+            Vec3D: The normalized direction vector of the velocity, or a zero vector if the velocity is zero.
+        """
         if self.velocity.lengthSquared() == 0:
             return Vec3D(0, 0, 0)
         return self.velocity / self.velocity.length()
 
     def get_acceleration(self) -> Vec3D:
+        """
+        Getter for the acceleration of the celestial body.
+        Returns:
+            Vec3D: The acceleration of the celestial body in 3D space.
+        """
         return self.__acceleration
 
     def get_velocity(self) -> Vec3D:
+        """
+        Getter for the velocity of the celestial body.
+        Returns:
+            Vec3D: The velocity of the celestial body in 3D space.
+        """
         return self.__velocity
 
     # ----------------------------- #
@@ -49,16 +99,41 @@ class PhysicsProperties:
     # ----------------------------- #
 
     def set_mass(self, mass: float) -> None:
+        """
+        Setter for the mass of the celestial body.
+        Args:
+            mass (float): The new mass of the celestial body.
+        """
         self.__mass = mass
 
     def set_radius(self, radius: float) -> None:
+        """
+        Setter for the radius of the celestial body.
+        Args:
+            radius (float): The new radius of the celestial body.
+        """
         self.__radius = radius
 
     def set_position(self, position: Vec3D) -> None:
+        """
+        Setter for the position of the celestial body.
+        Args:
+            position (Vec3D): The new position of the celestial body in 3D space.
+        """
         self.__position = position
 
     def set_acceleration(self, acceleration: Vec3D) -> None:
+        """
+        Setter for the acceleration of the celestial body.
+        Args:
+            acceleration (Vec3D): The new acceleration of the celestial body in 3D space.
+        """
         self.__acceleration = acceleration
 
     def set_velocity(self, velocity: Vec3D) -> None:
+        """
+        Setter for the velocity of the celestial body.
+        Args:
+            velocity (Vec3D): The new velocity of the celestial body in 3D space.
+        """
         self.__velocity = velocity

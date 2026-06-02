@@ -11,7 +11,14 @@ from src.core.physics.properties.physics_properties import PhysicsProperties
 
 
 class SolarSystemApp(ShowBase):
+    """
+    Main application class for the solar system simulation.
+    This class initializes the window, camera, lighting, shaders, and the celestial bodies (planets) with their physics properties. It also sets up the main task for updating the physics simulation.
+    """
     def __init__(self):
+        """
+        Init method of the application.
+        """
         super().__init__()
 
         # ---------------------------- #
@@ -76,10 +83,23 @@ class SolarSystemApp(ShowBase):
         # Physics Manager
         self.__physics_manager: PhysicsManager = PhysicsManager()
 
+        self.__init_celestial_bodies()
+
+        # ---------------------------- #
+        #       Task Management        #
+        # ---------------------------- #
+
+        self.__init_tasks()
+
+    def __init_celestial_bodies(self) -> None:
+        """
+        Initialize the celestial bodies (planets) with their physics properties and add them to the physics manager.
+        """
         # Celestial bodies initialization
         sun_mass = 1.9885e30
         sun_radius = 696340e3
 
+        # TODO: Load the data from a yaml/json file in the future instead of hardcoding it.
         # List: (name, mass in kg, radius in meters, distance in meters, texture)
         bodies = [
             ("Sun", sun_mass, sun_radius, 0.0, "assets/textures/sun.jpg"),
@@ -96,9 +116,10 @@ class SolarSystemApp(ShowBase):
         self.__objects: dict[str, Planet] = {}
 
         for name, mass_kg, radius_m, a_m, texture in bodies:
-            # rayon affiché : on réduit fortement le rayon réel et on impose une taille minimale visible
+            # Simulation radius is scaled for visibility, but we ensure a minimum size of 1 unit for very small planets.
             radius_sim = max((radius_m / DISTANCE_SCALE) * 0.2, 1) * 2
 
+            # Physics properties of the planet
             prop = PhysicsProperties(mass_kg, radius_sim, Vec3D(a_m, 0, 0))
             planet = Planet(name, prop)
             planet.set_texture(texture)
@@ -119,29 +140,31 @@ class SolarSystemApp(ShowBase):
                 planet.get_physics_properties().set_velocity(Vec3D(0, v_real, 0))
                 print(planet.get_physics_properties().get_velocity())
 
-            # mise à l'échelle du modèle pour la visibilité
+            # Scale the model to match the simulation radius.
             try:
                 planet.get_model().setScale(radius_sim)
             except Exception as e:
                 print(f"An exception occurred :\r{e}")
 
+            # Adding the planet to the objects dictionary and the physics manager.
             self.__objects[name] = planet
 
             planet.get_model().reparentTo(self.render)
             self.__physics_manager.add_physics_object(planet)
 
-        # ---------------------------- #
-        #       Task Management        #
-        # ---------------------------- #
-
-        self.__init_tasks()
-
     def __init_tasks(self) -> None:
+        """
+        Initialize the main tasks for the application.
+        """
+        # TODO: Create an attribute that stores tasks in a dictionary [str, Task] and the iterate over it to add them to the task manager.
         self.taskMgr.add(self.__physics_manager.update, "Physics Update Task")
-        """self.taskMgr.add(self.__earth.rotate, "Earth Rotation Task")
-        self.taskMgr.add(self.__e2.rotate, "Earth 2 Rotation Task")"""
 
     def set_camera_focus(self, target: Vec3D) -> None:
+        """
+        Reset the focus of the scene camera to a specific target position.
+        Args:
+            target (Vec3D): The position to focus the camera on.
+        """
         self.cam.setPos(target.getX(), target.getY(), target.getZ() + 5)
         self.cam.lookAt(target.getX(), target.getY(), target.getZ())
 

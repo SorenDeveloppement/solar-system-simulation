@@ -1,3 +1,7 @@
+"""
+Some complex math to generate an icosphere with proper UVs for texturing by using hycosahedron subdivision and spherical UV mapping.
+"""
+
 import math
 from panda3d.core import GeomVertexFormat, GeomVertexData, Geom, GeomNode, GeomPoints, GeomVertexWriter, NodePath, GeomTriangles
 

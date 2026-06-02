@@ -1,3 +1,7 @@
+"""
+This module provides a function to create a Fibonacci sphere, which is a method of distributing points evenly on the surface of a sphere. The function `create_fibonacci_sphere` generates a specified number of points on the sphere's surface using the Fibonacci lattice method.
+"""
+
 import math
 from panda3d.core import GeomVertexFormat, GeomVertexData, Geom, GeomNode, GeomPoints, GeomVertexWriter, NodePath, GeomTriangles
 

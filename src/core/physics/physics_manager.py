@@ -1,5 +1,3 @@
-import time
-
 from direct.task import Task
 from panda3d.core import Vec3D
 
@@ -8,17 +6,40 @@ from src.core.physics.celestial.celestial_body import CelestialBody
 
 
 class PhysicsManager:
+    """
+    The PhysicsManager class is responsible for managing the physics simulation of the celestial bodies in the solar system. It keeps track of all the physics objects (celestial bodies) and updates their positions and velocities based on the gravitational forces between them.
+    """
     def __init__(self) -> None:
+        """
+        Init method of the physics manager.
+        """
         self.__physics_objects: list[CelestialBody] = []
 
     def add_physics_object(self, physics_object: CelestialBody) -> None:
+        """
+        Add a physics object to the manager.
+        Args:
+            physics_object (CelestialBody): The physics object to be added to the manager.
+        """
         self.__physics_objects.append(physics_object)
 
     def remove_physics_object(self, physics_object: CelestialBody) -> None:
+        """
+        Remove a physics object from the manager. This is useful when an object is destroyed or removed from the simulation.
+        Args:
+            physics_object (CelestialBody): The physics object to be removed from the manager.
+        """
         if physics_object in self.__physics_objects:
             self.__physics_objects.remove(physics_object)
 
     def update(self, task: Task) -> None:
+        """
+        Update function of the physics manager, responsible for calculating the gravitational forces between all objects in space and updating their positions and velocities accordingly.
+
+        This function is called every frame by the task manager.
+        Args:
+            task (Task): The task object provided by the Panda3D task manager, which allows us to control the execution of this function and access timing information.
+        """
         # Each object in space interacts with others through gravity, so we need to calculate the forces between them and apply them to their physics properties.
         for i, object1 in enumerate(self.__physics_objects):
             # No need to calculate again the same pair of objects, so we start the inner loop from the next index.
