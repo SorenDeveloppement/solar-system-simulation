@@ -7,6 +7,14 @@ class CelestialBody:
         self.__physics_properties = physics_properties
 
     # ----------------------------- #
+    #            Methods            #
+    # ----------------------------- #
+
+    def update(self) -> None:
+        """Placeholder method to override in subclasses."""
+        pass
+
+    # ----------------------------- #
     #            Getters            #
     # ----------------------------- #
 
