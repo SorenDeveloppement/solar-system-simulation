@@ -14,6 +14,7 @@ This project aims at creating an accurate Solar system simulation with details o
 - [ ] Add a time control to speed up or slow down the simulation
 - [ ] Add a camera control to allow the user to navigate through the scene in a better way than the OG camera controls
 - [ ] Add a way to display the orbits of the planets and satellites
+  - [ ] The more the camera is zoomed out, the more the orbits are displayed. Store only point of 1 frame over the las 100 to save memory (not definitely, just an idea)
 - [ ] Add a way to display the names of the planets and satellites on hover
 - [ ] Add a way to display the stats of objects on hover
-  - [ ] And permanent when clicked 
+  - [ ] And permanent when clicked

@@ -3,7 +3,6 @@ import math
 from direct.filter.CommonFilters import CommonFilters
 from panda3d.core import WindowProperties, Vec4, Vec3D, PointLight, Material
 from direct.showbase.ShowBase import ShowBase
-from pygments.console import light_colors
 
 from src.constants import MASS_SCALE, DISTANCE_SCALE, TIME_SCALE, G, SIZE_SCALE
 from src.core.physics.celestial.celestial_body import CelestialBody
@@ -197,8 +196,17 @@ class SolarSystemApp(ShowBase):
         Initialize the main tasks for the application.
         """
         # TODO: Create an attribute that stores tasks in a dictionary [str, Task] and the iterate over it to add them to the task manager.
+        # Physics update should run continuously
         self.taskMgr.add(self.__physics_manager.update, "Physics Update Task")
-        # self.taskMgr.add(lambda task: self.set_camera_focus(self.__objects["Earth"].get_physics_properties().get_scaled_position(DISTANCE_SCALE)), "Camera Focus Task")
+
+        # Camera focus task: must return task.cont to continue running each frame
+        def camera_focus_task(task):
+            # Move camera to follow Earth (scaled position)
+            target = self.__objects["Earth"].get_physics_properties().get_scaled_position(DISTANCE_SCALE)
+            self.set_camera_focus(target)
+            return task.cont
+
+        self.taskMgr.add(camera_focus_task, "Camera Focus Task")
 
     def set_camera_focus(self, target: Vec3D) -> None:
         """
@@ -206,7 +214,7 @@ class SolarSystemApp(ShowBase):
         Args:
             target (Vec3D): The position to focus the camera on.
         """
-        self.cam.setPos(target.getX(), target.getY(), target.getZ() + 5)
+        self.cam.setPos(target.getX() - 15, target.getY() - 15, target.getZ() + 25)
         self.cam.lookAt(target.getX(), target.getY(), target.getZ())
 
 
