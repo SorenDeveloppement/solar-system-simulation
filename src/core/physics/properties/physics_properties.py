@@ -72,6 +72,17 @@ class PhysicsProperties:
         """
         return self.__position
 
+    def get_scaled_position(self, scale: float) -> Vec3D:
+        """
+        Getter for the scaled position of the celestial body, which is the position divided by a specified scale factor. This is useful for rendering purposes, where the actual positions may be too large to display directly.
+
+        Args:
+            scale (float): The scale factor by which to divide the position of the celestial body.
+        Returns:
+            Vec3D: The scaled position of the celestial body in 3D space.
+        """
+        return self.__position / scale
+
     def direction(self) -> Vec3D:
         """
         Returns the normalized direction vector. If the velocity is zero, it returns a zero vector.

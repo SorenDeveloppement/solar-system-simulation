@@ -58,10 +58,10 @@ class PhysicsManager:
                     direction: Vec3D = Vec3D.normalized(prop2.get_position() - prop1.get_position())
 
                     # Finally, we apply the force to both objects. The force on object1 is in the direction of object2, while the force on object2 is in the opposite direction (Newton's third law).
-                    if not object1.get_name() == "Sun":
+                    if not object1.get_physics_properties().is_fixed():
                         object1.get_physics_properties().apply_force(direction * F)
 
-                    if not object2.get_name() == "Sun":
+                    if not object2.get_physics_properties().is_fixed():
                         object2.get_physics_properties().apply_force(-direction * F)
 
         for obj in self.__physics_objects:

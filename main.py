@@ -3,9 +3,13 @@ import math
 from direct.filter.CommonFilters import CommonFilters
 from panda3d.core import WindowProperties, Vec4, Vec3D, PointLight, Material
 from direct.showbase.ShowBase import ShowBase
+from pygments.console import light_colors
 
-from src.constants import MASS_SCALE, DISTANCE_SCALE, TIME_SCALE, G
+from src.constants import MASS_SCALE, DISTANCE_SCALE, TIME_SCALE, G, SIZE_SCALE
+from src.core.physics.celestial.celestial_body import CelestialBody
 from src.core.physics.celestial.planet import Planet
+from src.core.physics.celestial.satellite import Satellite
+from src.core.physics.celestial.star import Star
 from src.core.physics.physics_manager import PhysicsManager
 from src.core.physics.properties.physics_properties import PhysicsProperties
 
@@ -38,7 +42,7 @@ class SolarSystemApp(ShowBase):
         #     Camera Configuration     #
         # ---------------------------- #
 
-        self.cam.setPos(0, 0, 1000)
+        self.cam.setPos(0, 0, 2_000)
         self.cam.lookAt(0, 0, 0)
 
         # ---------------------------- #
@@ -100,57 +104,93 @@ class SolarSystemApp(ShowBase):
         sun_radius = 696340e3
 
         # TODO: Load the data from a yaml/json file in the future instead of hardcoding it.
-        # List: (name, mass in kg, radius in meters, distance in meters, texture)
+        # List: (name, mass in kg, radius in meters, distance in meters, texture, type, satellites)
         bodies = [
-            ("Sun", sun_mass, sun_radius, 0.0, "assets/textures/sun.jpg"),
-            ("Mercury", 3.3011e23, 2439.7e3, 57.91e9, "assets/textures/mercury.jpg"),
-            ("Venus", 4.8675e24, 6051.8e3, 108.21e9, "assets/textures/venus.jpg"),
-            ("Earth", 5.97237e24, 6371.0e3, 149.60e9, "assets/textures/earth.jpg"),
-            ("Mars", 6.4171e23, 3389.5e3, 227.92e9, "assets/textures/mars.jpg"),
-            ("Jupiter", 1.8982e27, 69911e3, 778.57e9, "assets/textures/jupiter.jpg"),
-            ("Saturn", 5.6834e26, 58232e3, 1433.53e9, "assets/textures/saturn.jpg"),
-            ("Uranus", 8.6810e25, 25362e3, 2872.46e9, "assets/textures/uranus.png"),
-            ("Neptune", 1.02413e26, 24622e3, 4495.06e9, "assets/textures/neptune.jpg"),
+            ("Sun", sun_mass, sun_radius, 0.0, "assets/textures/sun.jpg", "star", None),
+            ("Mercury", 3.3011e23, 2439.7e3, 57.91e9, "assets/textures/mercury.jpg", "planet", None),
+            ("Venus", 4.8675e24, 6051.8e3, 108.21e9, "assets/textures/venus.jpg", "planet", None),
+            ("Earth", 5.97237e24, 6371.0e3, 149.60e9, "assets/textures/earth.jpg", "planet",
+                [Satellite("Moon", PhysicsProperties(mass=7.342e22, radius=1737.1e3), "Earth", 384400e3)]),
+            ("Mars", 6.4171e23, 3389.5e3, 227.92e9, "assets/textures/mars.jpg", "planet", None),
+            ("Jupiter", 1.8982e27, 69911e3, 778.57e9, "assets/textures/jupiter.jpg", "planet", None),
+            ("Saturn", 5.6834e26, 58232e3, 1433.53e9, "assets/textures/saturn.jpg", "planet", None),
+            ("Uranus", 8.6810e25, 25362e3, 2872.46e9, "assets/textures/uranus.png", "planet", None),
+            ("Neptune", 1.02413e26, 24622e3, 4495.06e9, "assets/textures/neptune.jpg", "planet", None),
         ]
 
-        self.__objects: dict[str, Planet] = {}
+        self.__objects: dict[str, CelestialBody] = {}
 
-        for name, mass_kg, radius_m, a_m, texture in bodies:
+        for name, mass_kg, radius_m, a_m, texture, type, satellites in bodies:
             # Simulation radius is scaled for visibility, but we ensure a minimum size of 1 unit for very small planets.
-            radius_sim = max((radius_m / DISTANCE_SCALE) * 0.2, 1) * 2
+            radius_sim = max((radius_m / SIZE_SCALE) * 0.2, 1)
 
             # Physics properties of the planet
             prop = PhysicsProperties(mass_kg, radius_sim, Vec3D(a_m, 0, 0))
-            planet = Planet(name, prop)
-            planet.set_texture(texture)
 
-            if name == "Sun":
-                sun_model = planet.get_model()
-                sun_model.setShaderAuto()
-                sun_model.setLightOff(1)
+            body: CelestialBody | None = None
+            match type:
+                case "star":
+                    body = Star(name, prop, luminosity=1.0, light_color=Vec4(3.0, 2.6, 1.2, 1.0))
+                    body.get_physics_properties().set_fixed(True)
+                case "planet":
+                    body = Planet(name, prop)
 
-                # Use an explicit emissive material so the Sun appears self-lit.
-                sun_material = Material()
-                sun_material.setEmission(Vec4(3.0, 2.6, 1.2, 1.0))
-                sun_model.setMaterial(sun_material, 1)
+            body.set_texture(texture)
 
-                planet.get_physics_properties().set_velocity(Vec3D(0, 0, 0))
-            else:
+            if a_m != 0.0:
                 v_real = math.sqrt(G * sun_mass / a_m)
-                planet.get_physics_properties().set_velocity(Vec3D(0, v_real, 0))
-                print(planet.get_physics_properties().get_velocity())
+            else:
+                v_real = 0.0
+            body.get_physics_properties().set_velocity(Vec3D(0, v_real, 0))
+            print(body.get_name(), body.get_physics_properties().get_scaled_position(DISTANCE_SCALE), body.get_physics_properties().get_velocity(), body.get_physics_properties().get_position())
+
+            if satellites is not None:
+                self.__add_satellites(body, satellites)
 
             # Scale the model to match the simulation radius.
             try:
-                planet.get_model().setScale(radius_sim)
+                body.get_model().setScale(radius_sim)
             except Exception as e:
                 print(f"An exception occurred :\r{e}")
 
             # Adding the planet to the objects dictionary and the physics manager.
-            self.__objects[name] = planet
+            self.__objects[name] = body
 
-            planet.get_model().reparentTo(self.render)
-            self.__physics_manager.add_physics_object(planet)
+            body.get_model().reparentTo(self.render)
+            self.__physics_manager.add_physics_object(body)
+
+    def __add_satellites(self, body: CelestialBody, satellites: list[Satellite] | None) -> None:
+        """
+        Add satellites to a planet and set their initial positions and velocities.
+        Args:
+            body (CelestialBody): The planet to which the satellites will be added.
+            satellites (list[Satellite] | None): A list of Satellite objects to be added to the planet. If None, no satellites will be added.
+        """
+        if satellites is not None:
+            for satellite in satellites:
+                satellite.get_model().reparentTo(self.render)
+                self.__objects[satellite.get_name()] = satellite
+                self.__physics_manager.add_physics_object(satellite)
+
+                # Set the initial position of the satellite based on its physics properties.
+                parent_pos = body.get_physics_properties().get_position()
+                satellite.get_physics_properties().set_position(
+                    Vec3D(parent_pos.getX() + satellite.get_distance_to_parent(), parent_pos.getY(), parent_pos.getZ()))
+
+                radius_sim = max((satellite.get_physics_properties().get_radius() / SIZE_SCALE) * 0.2, 0.5)
+                satellite.get_model().setScale(radius_sim)
+
+                # Set the initial velocity of the satellite based on its physics properties.
+                v_parent = body.get_physics_properties().get_velocity()
+                v_real = math.sqrt(G * body.get_physics_properties().get_mass() / satellite.get_distance_to_parent())
+                satellite.get_physics_properties().set_velocity(
+                    v_parent + Vec3D(0, v_real, 0)
+                )
+
+                if isinstance(body, Planet):
+                    body.add_satellite(satellite)
+
+                print(satellite.get_name(), satellite.get_physics_properties().get_scaled_position(DISTANCE_SCALE), satellite.get_physics_properties().get_velocity(), satellite.get_physics_properties().get_position())
 
     def __init_tasks(self) -> None:
         """
@@ -158,6 +198,7 @@ class SolarSystemApp(ShowBase):
         """
         # TODO: Create an attribute that stores tasks in a dictionary [str, Task] and the iterate over it to add them to the task manager.
         self.taskMgr.add(self.__physics_manager.update, "Physics Update Task")
+        # self.taskMgr.add(lambda task: self.set_camera_focus(self.__objects["Earth"].get_physics_properties().get_scaled_position(DISTANCE_SCALE)), "Camera Focus Task")
 
     def set_camera_focus(self, target: Vec3D) -> None:
         """
