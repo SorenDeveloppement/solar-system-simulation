@@ -8,17 +8,17 @@ class Satellite(CelestialBody):
     """
     The Satellites class overrides the CelestialBody class and represents a satellite in Space.
     """
-    def __init__(self, name: str, physics_prop, parent_planet: "Planet", distance_to_parent: float) -> None:
+    def __init__(self, name: str, physics_prop, parent_planet_name: str, distance_to_parent: float) -> None:
         """
         Init method of the Satellites class.
         Args:
             name (str): The name of the satellite (e.g., "Moon", "Phobos", "Deimos").
             physics_prop (PhysicsProperties): An instance of the PhysicsProperties class.
-            parent_planet (Planet): The planet that the satellite orbits around.
+            parent_planet_name (str): The planet that the satellite orbits around.
         """
         super().__init__(name, physics_prop)
 
-        self.__parent_planet: "Planet" = parent_planet
+        self.__parent_planet_name: str = parent_planet_name
         self.__distance_to_parent: float = distance_to_parent
 
     # ----------------------------- #
@@ -48,13 +48,13 @@ class Satellite(CelestialBody):
     #            Getters            #
     # ----------------------------- #
 
-    def get_parent_planet(self) -> "Planet":
+    def get_parent_planet(self) -> str:
         """
         Getter for the parent planet that the satellite orbits around.
         Returns:
             Planet: The parent planet that the satellite orbits around.
         """
-        return self.__parent_planet
+        return self.__parent_planet_name
 
     def get_distance_to_parent(self) -> float:
         """

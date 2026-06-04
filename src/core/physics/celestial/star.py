@@ -3,13 +3,14 @@ from panda3d.core import Vec4D, Material
 
 from src.constants import TIME_SCALE, DISTANCE_SCALE
 from src.core.physics.celestial.celestial_body import CelestialBody
+from src.core.physics.properties.physics_properties import PhysicsProperties
 
 
 class Star(CelestialBody):
     """
     The Star class overrides the CelestialBody class and represents a star in Space.
     """
-    def __init__(self, name: str, physics_prop, luminosity: float = 1.0, light_color: Vec4D = Vec4D(1, 1, 1, 1)) -> None:
+    def __init__(self, name: str, physics_prop: PhysicsProperties, luminosity: float = 1.0, light_color: Vec4D = Vec4D(1, 1, 1, 1)) -> None:
         """
         Init method of the Star class.
         Args:

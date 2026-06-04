@@ -46,6 +46,24 @@ class PhysicsProperties:
         """
         self.__acceleration = Vec3D(0, 0, 0)
 
+    def as_dict(self) -> dict[str, float | Vec3D | bool]:
+        """
+        Convert the physics properties of the celestial body into a dictionary format.
+
+        Returns:
+            dict[str, float | Vec3D | bool]: A dictionary containing the mass, radius, position, velocity, acceleration, fixed status, rotation speed, and orbital inclination of the celestial body.
+        """
+        return {
+            "mass": self.__mass,
+            "radius": self.__radius,
+            "position": self.__position,
+            "velocity": self.__velocity,
+            "acceleration": self.__acceleration,
+            "fixed": self.__fixed,
+            "rotation_speed": self.__rotation_speed,
+            "orbital_inclination": self.__orbital_inclination
+        }
+
     # ----------------------------- #
     #            Getters            #
     # ----------------------------- #

@@ -13,6 +13,7 @@ from src.core.physics.celestial.satellite import Satellite
 from src.core.physics.celestial.star import Star
 from src.core.physics.physics_manager import PhysicsManager
 from src.core.physics.properties.physics_properties import PhysicsProperties
+from src.core.scenes.scene_saver import SceneSaver
 
 if TYPE_CHECKING:
     from main import SolarSystemApp
@@ -39,6 +40,8 @@ class Scene:
         # Initialisation of the scene
         # TODO: Remove hardcoded celestial bodies initialization
         self.__init_celestial_bodies()
+
+        self.save_scene("./assets/scenes")
 
     # ---------------------------- #
     #           Methods            #
@@ -122,8 +125,9 @@ class Scene:
         Args:
             scene_path (str): The path to the scene file to be saved.
         """
-        # TODO: Implement a method to save the current scene to a yaml file.
-        raise NotImplementedError("The save_scene method must be implemented before being used.")
+        saver: SceneSaver = SceneSaver()
+        saver.name(self.__name).objects(self.__objects).cameras(self.__cameras).lights(self.__lights)
+        saver.save_scene(self.__name, scene_path)
 
     # ---------------------------- #
     #            Getters           #
