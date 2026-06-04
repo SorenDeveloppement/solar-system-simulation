@@ -100,7 +100,7 @@ class SolarSystemApp(ShowBase):
             return task.cont
 
         # Focus Earth for tests purposes
-        # self.taskMgr.add(camera_focus_task, "Camera Focus Task")
+        self.taskMgr.add(camera_focus_task, "Camera Focus Task")
 
     def set_camera_focus(self, target: Vec3D) -> None:
         """
@@ -108,7 +108,8 @@ class SolarSystemApp(ShowBase):
         Args:
             target (Vec3D): The position to focus the camera on.
         """
-        self.cam.setPos(target.getX() - 15, target.getY() - 15, target.getZ() + 25)
+        # self.cam.setPos(target.getX() - 15, target.getY() - 15, target.getZ() + 25)
+        self.cam.setPos(target.getX() - 15, target.getY(), target.getZ())
         self.cam.lookAt(target.getX(), target.getY(), target.getZ())
 
     def switch_to_cam(self, camera: NodePath) -> None:

@@ -6,7 +6,7 @@ class PhysicsProperties:
     The PhysicsProperties class encapsulates the physical properties of a celestial body, such as mass, radius, position, velocity, and acceleration. It provides methods to apply forces to the body and update its state based on the applied forces.
     """
     def __init__(self, mass: float = 1.0, radius: float = 1.0, position: Vec3D = Vec3D(0, 0, 0), fixed: bool = False,
-                 rotatoion_speed: float = 1.0) -> None:
+                 rotation_speed: float = 1.0, orbital_inclination: float = 0.0) -> None:
         """
             Init method of the PhysicsProperties class, which initializes the mass, radius, position, velocity, and acceleration of the celestial body.
         Args:
@@ -14,7 +14,8 @@ class PhysicsProperties:
             radius (float): The radius of the celestial body, which is used for collision detection and rendering purposes. Defaults to 1.0.
             position (Vec3D): The initial position of the celestial body in 3D space, represented as a Vec3D object. This position will be updated over time based on the body's velocity and acceleration. Defaults to Vec3D(0, 0, 0).
             fixed (bool): A boolean flag indicating whether the celestial body is fixed in space (i.e., it does not move or respond to forces). If set to True, the body will not be affected by forces and will not update its position or velocity. Defaults to False.
-            rotatoion_speed (float): The rotation speed of the celestial body, which determines how fast it rotates around its own axis.
+            rotation_speed (float): The rotation speed of the celestial body, which determines how fast it rotates around its own axis.
+            orbital_inclination (float): The orbital inclination of the celestial body, which is the angle between the body's orbital plane and a reference plane (usually the ecliptic plane).
         """
         self.__mass: float = mass
         self.__radius: float = radius
@@ -22,7 +23,8 @@ class PhysicsProperties:
         self.__position: Vec3D = position
         self.__velocity: Vec3D = Vec3D(0, 0, 0)
         self.__fixed: bool = fixed
-        self.__rotation_speed: float = rotatoion_speed
+        self.__rotation_speed: float = rotation_speed
+        self.__orbital_inclination: float = orbital_inclination
 
     # ----------------------------- #
     #            Methods            #
@@ -126,6 +128,14 @@ class PhysicsProperties:
         """
         return self.__fixed
 
+    def get_orbital_inclination(self) -> float:
+        """
+        Getter for the orbital inclination of the celestial body.
+        Returns:
+            float: The orbital inclination of the celestial body in degrees.
+        """
+        return self.__orbital_inclination
+
     # ----------------------------- #
     #            Setters            #
     # ----------------------------- #
@@ -185,3 +195,11 @@ class PhysicsProperties:
             fixed (bool): A boolean flag indicating whether the celestial body is fixed in space or not.
         """
         self.__fixed = fixed
+
+    def set_orbital_inclination(self, orbital_inclination: float) -> None:
+        """
+        Setter for the orbital inclination of the celestial body.
+        Args:
+            orbital_inclination (float): The new orbital inclination of the celestial body in degrees.
+        """
+        self.__orbital_inclination = orbital_inclination

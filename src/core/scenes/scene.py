@@ -228,7 +228,7 @@ class Scene:
             ("Mercury", 3.3011e23, 2439.7e3, 57.91e9, "assets/textures/mercury.jpg", "planet", None),
             ("Venus", 4.8675e24, 6051.8e3, 108.21e9, "assets/textures/venus.jpg", "planet", None),
             ("Earth", 5.97237e24, 6371.0e3, 149.60e9, "assets/textures/earth.jpg", "planet",
-                [Satellite("Moon", PhysicsProperties(mass=7.342e22, radius=1737.1e3), "Earth", 384400e3)]),
+                [Satellite("Moon", PhysicsProperties(mass=7.342e22, radius=1737.1e3, orbital_inclination=5.145), "Earth", 384400e3)]),
             ("Mars", 6.4171e23, 3389.5e3, 227.92e9, "assets/textures/mars.jpg", "planet", None),
             ("Jupiter", 1.8982e27, 69911e3, 778.57e9, "assets/textures/jupiter.jpg", "planet", None),
             ("Saturn", 5.6834e26, 58232e3, 1433.53e9, "assets/textures/saturn.jpg", "planet", None),
@@ -284,28 +284,74 @@ class Scene:
             body (CelestialBody): The planet to which the satellites will be added.
             satellites (list[Satellite] | None): A list of Satellite objects to be added to the planet. If None, no satellites will be added.
         """
+        # TODO: Merge both satellite and planet initialization in the future to avoid code duplication and ensure consistency between them.
         if satellites is not None:
             for satellite in satellites:
-                satellite.get_model().reparentTo(self.__parent.get_render())
+
+                model = satellite.get_model()
+                model.reparentTo(self.__parent.get_render())
+
                 self.__objects[satellite.get_name()] = satellite
                 self.__physics_manager.add_physics_object(satellite)
 
-                # Set the initial position of the satellite based on its physics properties.
+                # ------------------------------ #
+                #           Parent data          #
+                # ------------------------------ #
                 parent_pos = body.get_physics_properties().get_position()
-                satellite.get_physics_properties().set_position(
-                    Vec3D(parent_pos.getX() + satellite.get_distance_to_parent(), parent_pos.getY(), parent_pos.getZ()))
+                parent_vel = body.get_physics_properties().get_velocity()
 
-                radius_sim = max((satellite.get_physics_properties().get_radius() / SIZE_SCALE) * 0.2, 0.5)
-                satellite.get_model().setScale(radius_sim)
+                r = satellite.get_distance_to_parent()
+                i = math.radians(satellite.get_physics_properties().get_orbital_inclination())
 
-                # Set the initial velocity of the satellite based on its physics properties.
-                v_parent = body.get_physics_properties().get_velocity()
-                v_real = math.sqrt(G * body.get_physics_properties().get_mass() / satellite.get_distance_to_parent())
-                satellite.get_physics_properties().set_velocity(
-                    v_parent + Vec3D(0, v_real, 0)
+                # ------------------------------ #
+                #         Initial position       #
+                # ------------------------------ #
+                position = Vec3D(
+                    parent_pos.getX() + r,
+                    parent_pos.getY(),
+                    parent_pos.getZ()
                 )
 
+                satellite.get_physics_properties().set_position(position)
+
+                # ------------------------------ #
+                #        Orbital velocity        #
+                #         v = sqrt(GM/r)         #
+                # ------------------------------ #
+                v = math.sqrt(
+                    G * body.get_physics_properties().get_mass() / r
+                )
+
+                # Tangent direction + inclination rotation around X axis
+                # (orbit plane XZ rotated around X axis)
+                vx = 0
+                vy = v * math.cos(i)
+                vz = v * math.sin(i)
+
+                velocity = Vec3D(vx, vy, vz)
+
+                # Add parent velocity (correct for N-body systems)
+                satellite.get_physics_properties().set_velocity(
+                    parent_vel + velocity
+                )
+
+                # ------------------------------ #
+                #          Scale model           #
+                # ------------------------------ #
+                radius_sim = max(
+                    (satellite.get_physics_properties().get_radius() / SIZE_SCALE) * 0.2,
+                    0.5
+                )
+                model.setScale(radius_sim)
+
+                # ------------------------------ #
+                #   Attach to planet if needed   #
+                # ------------------------------ #
                 if isinstance(body, Planet):
                     body.add_satellite(satellite)
 
-                print(satellite.get_name(), satellite.get_physics_properties().get_scaled_position(DISTANCE_SCALE), satellite.get_physics_properties().get_velocity(), satellite.get_physics_properties().get_position())
+                print(
+                    satellite.get_name(),
+                    satellite.get_physics_properties().get_position(),
+                    satellite.get_physics_properties().get_velocity()
+                )
