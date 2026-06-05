@@ -1,229 +1,201 @@
-cameras: {}
-lights: []
+scene_name: Solar System
 objects:
-  Earth:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 5.97237e+24
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 149600000000.0
-      - 0.0
-      - 0.0
-      radius: 1.2742000000000002
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 29785.15487962432
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
-  Jupiter:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 1.8982e+27
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 778570000000.0
-      - 0.0
-      - 0.0
-      radius: 13.9822
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 13056.200981261356
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
-  Mars:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 6.4171e+23
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 227920000000.0
-      - 0.0
-      - 0.0
-      radius: 1
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 24130.95119983992
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
-  Mercury:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 3.3011e+23
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 57910000000.0
-      - 0.0
-      - 0.0
-      radius: 1
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 47872.80525147324
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
-  Moon:
-    distance_to_parent: 384400000.0
-    parent_planet: Earth
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 7.342e+22
-      orbital_inclination: 5.145
-      position: !!python/tuple
-      - 149984400000.0
-      - 0.0
-      - 0.0
-      radius: 1737100.0
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 30799.372595370427
-      - 91.31948561969686
-    type: Satellite
-  Neptune:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 1.02413e+26
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 4495060000000.0
-      - 0.0
-      - 0.0
-      radius: 4.9244
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 5433.728226714293
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
-  Saturn:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 5.6834e+26
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 1433530000000.0
-      - 0.0
-      - 0.0
-      radius: 11.6464
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 9621.931626585441
-      - 0.0
-    surface_gravity: 1.0
-    type: Planet
   Sun:
+    type: Star
+    luminosity: 1.0
     light_color: !!python/tuple
     - 3.0
     - 2.5999999046325684
     - 1.2000000476837158
     - 1.0
-    luminosity: 1.0
     physics_properties:
-      acceleration: !!python/tuple
+      mass: 1.9885e+30
+      radius: 139.268
+      position: !!python/tuple
+      - 0.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
       - 0.0
       - 0.0
       - 0.0
       fixed: true
-      mass: 1.9885e+30
-      orbital_inclination: 0.0
-      position: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      radius: 139.268
       rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-    type: Star
-  Uranus:
-    has_atmosphere: false
-    physics_properties:
-      acceleration: !!python/tuple
-      - 0.0
-      - 0.0
-      - 0.0
-      fixed: false
-      mass: 8.681e+25
       orbital_inclination: 0.0
-      position: !!python/tuple
-      - 2872460000000.0
-      - 0.0
-      - 0.0
-      radius: 5.0724
-      rotation_speed: 1.0
-      velocity: !!python/tuple
-      - 0.0
-      - 6797.334849920732
-      - 0.0
-    surface_gravity: 1.0
+    texture: assets/textures/sun.jpg
+  Mercury:
     type: Planet
-  Venus:
     has_atmosphere: false
+    surface_gravity: 1.0
     physics_properties:
-      acceleration: !!python/tuple
+      mass: 3.3011e+23
+      radius: 1
+      position: !!python/tuple
+      - 57910000000.0
       - 0.0
       - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 47872.80525147324
       - 0.0
       fixed: false
-      mass: 4.8675e+24
+      rotation_speed: 1.0
       orbital_inclination: 0.0
+    texture: assets/textures/mercury.jpg
+  Venus:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 4.8675e+24
+      radius: 1.21036
       position: !!python/tuple
       - 108210000000.0
       - 0.0
       - 0.0
-      radius: 1.21036
-      rotation_speed: 1.0
       velocity: !!python/tuple
       - 0.0
       - 35021.275630517106
       - 0.0
-    surface_gravity: 1.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/venus.jpg
+  Earth:
     type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 5.97237e+24
+      radius: 1.2742000000000002
+      position: !!python/tuple
+      - 149600000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 29785.15487962432
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/earth.jpg
+  Moon:
+    type: Satellite
+    parent_planet: Earth
+    distance_to_parent: 384400000.0
+    physics_properties:
+      mass: 7.342e+22
+      radius: 1737100.0
+      position: !!python/tuple
+      - 149984400000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 30799.372595370427
+      - 91.31948561969686
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 5.145
+    texture: null
+  Mars:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 6.4171e+23
+      radius: 1
+      position: !!python/tuple
+      - 227920000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 24130.95119983992
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/mars.jpg
+  Jupiter:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 1.8982e+27
+      radius: 13.9822
+      position: !!python/tuple
+      - 778570000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 13056.200981261356
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/jupiter.jpg
+  Saturn:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 5.6834e+26
+      radius: 11.6464
+      position: !!python/tuple
+      - 1433530000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 9621.931626585441
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/saturn.jpg
+  Uranus:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 8.681e+25
+      radius: 5.0724
+      position: !!python/tuple
+      - 2872460000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 6797.334849920732
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/uranus.png
+  Neptune:
+    type: Planet
+    has_atmosphere: false
+    surface_gravity: 1.0
+    physics_properties:
+      mass: 1.02413e+26
+      radius: 4.9244
+      position: !!python/tuple
+      - 4495060000000.0
+      - 0.0
+      - 0.0
+      velocity: !!python/tuple
+      - 0.0
+      - 5433.728226714293
+      - 0.0
+      fixed: false
+      rotation_speed: 1.0
+      orbital_inclination: 0.0
+    texture: assets/textures/neptune.jpg
+cameras: {}
+lights: []
 other_properties: {}
-scene_name: Solar System
+app_version: 0.1.0
+type: SceneData

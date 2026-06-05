@@ -1,4 +1,5 @@
-"""Physical constants used in the project."""
+"""Physical constants used in the project.
+And apps constants."""
 
 G: float = 6.67430e-11
 """Gravitational constant in m^3 kg^-1 s^-2 or N m^2 kg^-2"""
@@ -17,3 +18,6 @@ MASS_SCALE = 1e21
 
 TIME_SCALE = 86400
 """Scene time scale factor. 1 second in the scene corresponds to 86400 seconds (1 day) in real life."""
+
+APP_VERSION: str = "0.1.0"
+"""Version of the application. Useful for scene saving/loading to ensure compatibility."""

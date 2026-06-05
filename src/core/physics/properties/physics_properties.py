@@ -58,7 +58,6 @@ class PhysicsProperties:
             "radius": self.__radius,
             "position": self.__position,
             "velocity": self.__velocity,
-            "acceleration": self.__acceleration,
             "fixed": self.__fixed,
             "rotation_speed": self.__rotation_speed,
             "orbital_inclination": self.__orbital_inclination

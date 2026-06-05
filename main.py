@@ -4,6 +4,7 @@ from direct.showbase.ShowBase import ShowBase
 
 from src.constants import DISTANCE_SCALE
 from src.core.scenes.scene import Scene
+from src.core.scenes.scene_loader import SceneLoader
 
 
 class SolarSystemApp(ShowBase):
@@ -72,7 +73,8 @@ class SolarSystemApp(ShowBase):
         #         Other Setup          #
         # ---------------------------- #
 
-        self.__scene: Scene = Scene(self, "Solar System")
+        self.__scene: Scene = SceneLoader(self, "./assets/scenes/Solar System.yaml").load()
+        # self.__scene: Scene = Scene(self, "Solar System")
 
         # ---------------------------- #
         #    Physics & Objects Setup   #

@@ -3,8 +3,9 @@ from typing import Self, Any
 
 import yaml
 
-from panda3d.core import NodePath, Light, Vec3D, Vec4D
+from panda3d.core import NodePath, Light, Vec3D, Vec4D, DirectionalLight, Spotlight
 
+from src.constants import APP_VERSION
 from src.core.physics.celestial.celestial_body import CelestialBody
 from src.core.physics.celestial.planet import Planet
 from src.core.physics.celestial.satellite import Satellite
@@ -41,11 +42,16 @@ class SceneSaver:
             "objects": self.__scene_objects,
             "cameras": self.__scene_cameras,
             "lights": self.__scene_lights,
-            "other_properties": self.__scene_other_properties
+            "other_properties": self.__scene_other_properties,
+            "app_version": APP_VERSION,
+            "type": "SceneData"
         }
 
         with open(f"{path}/{file_name}.yaml", "w") as file:
-            yaml.dump(data, file)
+            # sort_keys=False to avoid sorting the keys alphabetically.
+            # However, the order is scrambled and satellites could be initialized before their parent planets,
+            # which will cause potential errors in the loader.
+            yaml.dump(data, file, sort_keys=False)
             file.close()
 
     def name(self, name: str) -> Self:
@@ -91,6 +97,7 @@ class SceneSaver:
                     "type": "CelestialBody"
                 }
             self.__scene_objects[name]["physics_properties"] = {}
+            self.__scene_objects[name]["texture"] = obj.get_texture()
             for p_name, property in obj.get_physics_properties().as_dict().items():
                 if isinstance(property, Vec3D):
                     self.__scene_objects[name]["physics_properties"][p_name] = vec3d_as_tuple(property)
@@ -128,9 +135,14 @@ class SceneSaver:
             Self: The SceneSaver instance for method chaining.
         """
         for light in lights:
-            self.__scene_lights.append({
+            data = {
                 "type": type(light).__name__,
                 "position": vec3d_as_tuple(light.getPos()),
                 "color": vec4d_as_tuple(light.getColor())
-            })
+            }
+
+            if isinstance(light, (DirectionalLight, Spotlight)):
+                data["direction"] = vec3d_as_tuple(light.getDirection())
+
+            self.__scene_lights.append(data)
         return self

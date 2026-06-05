@@ -39,7 +39,7 @@ class Scene:
 
         # Initialisation of the scene
         # TODO: Remove hardcoded celestial bodies initialization
-        self.__init_celestial_bodies()
+        # self.__init_celestial_bodies()
 
         self.save_scene("./assets/scenes")
 
@@ -132,6 +132,14 @@ class Scene:
     # ---------------------------- #
     #            Getters           #
     # ---------------------------- #
+
+    def get_parent(self) -> SolarSystemApp:
+        """
+        Getter for the parent application of the scene.
+        Returns:
+            SolarSystemApp: The parent application instance of the scene.
+        """
+        return self.__parent
 
     def get_name(self) -> str:
         """
@@ -266,9 +274,6 @@ class Scene:
             body.get_physics_properties().set_velocity(Vec3D(0, v_real, 0))
             print(body.get_name(), body.get_physics_properties().get_scaled_position(DISTANCE_SCALE), body.get_physics_properties().get_velocity(), body.get_physics_properties().get_position())
 
-            if satellites is not None:
-                self.__add_satellites(body, satellites)
-
             # Scale the model to match the simulation radius.
             try:
                 body.get_model().setScale(radius_sim)
@@ -280,6 +285,9 @@ class Scene:
 
             body.get_model().reparentTo(self.__parent.get_render())
             self.__physics_manager.add_physics_object(body)
+
+            if satellites is not None:
+                self.__add_satellites(body, satellites)
 
     def __add_satellites(self, body: CelestialBody, satellites: list[Satellite] | None) -> None:
         """
